@@ -1,0 +1,42 @@
+pdf_links:
+  djelfa: 'https://www.marw.dz/media/calendrier/1442/djelfa.pdf'
+  alger : 'https://www.marw.dz/media/calendrier/1442/alger.pdf'
+  adrar : 'https://www.marw.dz/media/calendrier/1442/adrar.pdf'
+
+
+pdf_paths:
+  djelfa: '../assets/20-21/pdfs/djelfa.pdf'
+  alger : '../assets/20-21/pdfs/alger.pdf'
+  adrar : '../assets/20-21/pdfs/adrar.pdf'
+
+tabula_template: '../assets/20-21/tabula-templates/djelfa.json'
+
+mawaqit_for_wilayas_dir: '/home/mohammedi/workspace/salat-dz/assets/20-21/mawaqit'
+
+column_names:
+  diff: 'الفروق'
+  date: 'الموافق'
+  qibla: 'القبلة'
+  zawal: 'الزوال'
+  dhohr: 'الظهر'
+  wilaya: 'الولاية'
+
+salawat:
+  fajr: 'الفجر'
+  chorok: 'الشروق'
+  dhohr: 'الظهر'
+  asr: 'العصر'
+  maghrib: 'المغرب'
+  icha: 'العشاء'
+
+salawat_names:
+  - 'الفجر'
+  - 'الشروق'
+  - 'الظهر'
+  - 'العصر'
+  - 'المغرب'
+  - 'العشاء'
+
+api:
+  title: 'Mawaqit salat API'
+  description: 'Provides correct Mawaqit extracted from ministry website https://marw.dz'
