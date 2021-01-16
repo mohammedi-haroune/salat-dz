@@ -1,9 +1,45 @@
 import os
+import json
+from datetime import datetime
+from marshmallow.fields import Field
+from pytz import timezone
 
 from flask_restx.fields import MarshallingError, Raw
-from datetime import time
+from datetime import datetime, time
+from webargs.core import ArgMap, Parser
+from werkzeug.routing import BaseConverter, ValidationError
 
 import pandas as pd
+
+from .config import settings
+from .reader import str_to_date
+
+
+DZ = timezone('Africa/Algiers')
+def today(tz=DZ):
+    dt_now = datetime.now(tz=tz)
+    today = dt_now.date()
+    return today.isoformat()
+
+
+def argmap_to_swagger_params(argmap: ArgMap, req=None):
+    parser = Parser()
+    schema = parser._get_schema(argmap, req)
+    params = {}
+    for name, field in schema.fields.items():
+        params[name] = {
+            'description': field.metadata.get('description', name.capitalize()),
+            'type': field_to_type(field)
+        }
+
+    return params
+
+
+def field_to_type(field: Field):
+    # TODO: improve this by using OBJ_TYPE and num_type when available
+    return field.__class__.__name__.lower()
+
+
 
 def read_mawaqit_for_wilayas(directory):
     mawaqit_for_wilayas = {}
@@ -15,13 +51,28 @@ def read_mawaqit_for_wilayas(directory):
     return mawaqit_for_wilayas
 
 
-def append_wilaya_column(mawaqit_for_wilayas, wilaya_column_name):
+def read_wilayas_values(path):
+    # TODO: check names got from the json file and those from the pdfs
+    with open(path) as f:
+        wilayas = json.load(f)
+    arabic_names = [w['arabic_name'] for w in wilayas]
+    french_names = [w['french_name'] for w in wilayas]
+    codes = [w['code'] for w in wilayas]
+    accepted_values = arabic_names + french_names + codes
+    return accepted_values
+    
+
+
+def create_mawaqits(mawaqit_for_wilayas, wilaya_column_name):
     dfs = []
     for wilaya, mawaqit in mawaqit_for_wilayas.items():
         mawaqit[wilaya_column_name] = wilaya
         dfs.append(mawaqit)
 
     mawaqits = pd.concat(dfs)
+
+    mawaqits[settings.column_names.date] = mawaqits[settings.column_names.date].apply(str_to_date)
+    mawaqits.index = mawaqits[settings.column_names.date]
     return mawaqits
 
 

@@ -1,0 +1,292 @@
+[
+    {
+        "code": "01",
+        "french_name": "Adrar",
+        "arabic_name": "أدرار"
+    },
+    {
+        "code": "02",
+        "french_name": "Chlef",
+        "arabic_name": "الشلف"
+    },
+    {
+        "code": "03",
+        "french_name": "Laghouat",
+        "arabic_name": "الأغواط"
+    },
+    {
+        "code": "04",
+        "french_name": "Oum El Bouaghi",
+        "arabic_name": "أم البواقي"
+    },
+    {
+        "code": "05",
+        "french_name": "Batna",
+        "arabic_name": "باتنة"
+    },
+    {
+        "code": "06",
+        "french_name": "Béjaïa",
+        "arabic_name": "بجاية"
+    },
+    {
+        "code": "07",
+        "french_name": "Biskra",
+        "arabic_name": "بسكرة"
+    },
+    {
+        "code": "08",
+        "french_name": "Béchar",
+        "arabic_name": "بشار"
+    },
+    {
+        "code": "09",
+        "french_name": "Blida",
+        "arabic_name": "البليدة"
+    },
+    {
+        "code": "10",
+        "french_name": "Bouïra",
+        "arabic_name": "البويرة"
+    },
+    {
+        "code": "11",
+        "french_name": "Tamanrasset",
+        "arabic_name": "تمنراست"
+    },
+    {
+        "code": "12",
+        "french_name": "Tébessa",
+        "arabic_name": "تبسة"
+    },
+    {
+        "code": "13",
+        "french_name": "Tlemcen",
+        "arabic_name": "تلمسان"
+    },
+    {
+        "code": "14",
+        "french_name": "Tiaret",
+        "arabic_name": "تيارت"
+    },
+    {
+        "code": "15",
+        "french_name": "Tizi Ouzou",
+        "arabic_name": "تيزي وزو"
+    },
+    {
+        "code": "16",
+        "french_name": "Alger",
+        "arabic_name": "الجزائر"
+    },
+    {
+        "code": "17",
+        "french_name": "Djelfa",
+        "arabic_name": "الجلفة"
+    },
+    {
+        "code": "18",
+        "french_name": "Jijel",
+        "arabic_name": "جيجل"
+    },
+    {
+        "code": "19",
+        "french_name": "Sétif",
+        "arabic_name": "سطيف"
+    },
+    {
+        "code": "20",
+        "french_name": "Saïda",
+        "arabic_name": "سعيدة"
+    },
+    {
+        "code": "21",
+        "french_name": "Skikda",
+        "arabic_name": "سكيكدة"
+    },
+    {
+        "code": "22",
+        "french_name": "Sidi Bel Abbès",
+        "arabic_name": "سيدي بلعباس"
+    },
+    {
+        "code": "23",
+        "french_name": "Annaba",
+        "arabic_name": "عنابة"
+    },
+    {
+        "code": "24",
+        "french_name": "Guelma",
+        "arabic_name": "قالمة"
+    },
+    {
+        "code": "25",
+        "french_name": "Constantine",
+        "arabic_name": "قسنطينة"
+    },
+    {
+        "code": "26",
+        "french_name": "Médéa",
+        "arabic_name": "المدية"
+    },
+    {
+        "code": "27",
+        "french_name": "Mostaganem",
+        "arabic_name": "مستغانم"
+    },
+    {
+        "code": "28",
+        "french_name": "MSila",
+        "arabic_name": "المسيلة"
+    },
+    {
+        "code": "29",
+        "french_name": "Mascara",
+        "arabic_name": "معسكر"
+    },
+    {
+        "code": "30",
+        "french_name": "Ouargla",
+        "arabic_name": "ورقلة"
+    },
+    {
+        "code": "31",
+        "french_name": "Oran",
+        "arabic_name": "وهران"
+    },
+    {
+        "code": "32",
+        "french_name": "El Bayadh",
+        "arabic_name": "البيض"
+    },
+    {
+        "code": "33",
+        "french_name": "Illizi",
+        "arabic_name": "اليزي"
+    },
+    {
+        "code": "34",
+        "french_name": "Bordj Bou Arréridj",
+        "arabic_name": "برج بوعريريج"
+    },
+    {
+        "code": "35",
+        "french_name": "Boumerdès",
+        "arabic_name": "بومرداس"
+    },
+    {
+        "code": "36",
+        "french_name": "El Tarf",
+        "arabic_name": "الطارف"
+    },
+    {
+        "code": "37",
+        "french_name": "Tindouf",
+        "arabic_name": "تندوف"
+    },
+    {
+        "code": "38",
+        "french_name": "Tissemsilt",
+        "arabic_name": "تسمسيلت"
+    },
+    {
+        "code": "39",
+        "french_name": "El Oued",
+        "arabic_name": "الوادي"
+    },
+    {
+        "code": "40",
+        "french_name": "Khenchela",
+        "arabic_name": "خنشلة"
+    },
+    {
+        "code": "41",
+        "french_name": "Souk Ahras",
+        "arabic_name": "سوق أهراس"
+    },
+    {
+        "code": "42",
+        "french_name": "Tipaza",
+        "arabic_name": "تيبازة"
+    },
+    {
+        "code": "43",
+        "french_name": "Mila",
+        "arabic_name": "ميلة"
+    },
+    {
+        "code": "44",
+        "french_name": "Aïn Defla",
+        "arabic_name": "عين الدفلى"
+    },
+    {
+        "code": "45",
+        "french_name": "Naâma",
+        "arabic_name": "النعامة"
+    },
+    {
+        "code": "46",
+        "french_name": "Aïn Témouchent",
+        "arabic_name": "عين تموشنت"
+    },
+    {
+        "code": "47",
+        "french_name": "Ghardaïa",
+        "arabic_name": "غرداية"
+    },
+    {
+        "code": "48",
+        "french_name": "Relizane",
+        "arabic_name": "غليزان"
+    },
+    {
+        "code": "49",
+        "french_name": "El Mghair",
+        "arabic_name": "المغير"
+    },
+    {
+        "code": "50",
+        "french_name": "El Menia",
+        "arabic_name": "المنيعة"
+    },
+    {
+        "code": "51",
+        "french_name": "Ouled Djellal",
+        "arabic_name": "أولاد جلال"
+    },
+    {
+        "code": "52",
+        "french_name": "Bordj Baji Mokhtar",
+        "arabic_name": "برج باجي مختار"
+    },
+    {
+        "code": "53",
+        "french_name": "Béni Abbès",
+        "arabic_name": "بني عباس"
+    },
+    {
+        "code": "54",
+        "french_name": "Timimoun",
+        "arabic_name": "تيميمون"
+    },
+    {
+        "code": "55",
+        "french_name": "Touggourt",
+        "arabic_name": "تقرت"
+    },
+    {
+        "code": "56",
+        "french_name": "Djanet",
+        "arabic_name": "جانت"
+    },
+    {
+        "code": "57",
+        "french_name": "In Salah",
+        "arabic_name": "عين صالح"
+    },
+    {
+        "code": "58",
+        "french_name": "In Guezzam",
+        "arabic_name": "عين قزّام"
+    }
+]

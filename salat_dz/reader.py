@@ -7,7 +7,7 @@ from typing import Iterable, Tuple, TypeVar
 import tabula
 import pandas as pd
 
-from config import settings
+from .config import settings
 
 
 T = TypeVar("T")

@@ -5,13 +5,15 @@ pdf_links:
 
 
 pdf_paths:
-  djelfa: '../assets/20-21/pdfs/djelfa.pdf'
-  alger : '../assets/20-21/pdfs/alger.pdf'
-  adrar : '../assets/20-21/pdfs/adrar.pdf'
+  djelfa: 'assets/20-21/pdfs/djelfa.pdf'
+  alger : 'assets/20-21/pdfs/alger.pdf'
+  adrar : 'assets/20-21/pdfs/adrar.pdf'
 
-tabula_template: '../assets/20-21/tabula-templates/djelfa.json'
+tabula_template: 'assets/20-21/tabula-templates/djelfa.json'
 
-mawaqit_for_wilayas_dir: '/home/mohammedi/workspace/salat-dz/assets/20-21/mawaqit'
+wilayas_file: 'assets/wilayas.json'
+
+mawaqit_for_wilayas_dir: 'assets/20-21/mawaqit'
 
 column_names:
   diff: 'الفروق'
@@ -20,6 +22,8 @@ column_names:
   zawal: 'الزوال'
   dhohr: 'الظهر'
   wilaya: 'الولاية'
+  salat_name: 'صلاة'
+  salat_time: 'الوقت'
 
 salawat:
   fajr: 'الفجر'
