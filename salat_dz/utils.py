@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from marshmallow.fields import Field
 from pytz import timezone
+from pathlib import Path
 
 from flask_restx.fields import MarshallingError, Raw
 from datetime import datetime, time
@@ -44,8 +45,8 @@ def field_to_type(field: Field):
 def read_mawaqit_for_wilayas(directory):
     mawaqit_for_wilayas = {}
     for f in os.listdir(directory):
-        [wilaya, _] = f.split('.')
         path = os.path.join(directory, f)
+        wilaya = Path(path).stem
         mawaqit_for_wilayas[wilaya] = pd.read_csv(path, index_col=False)
 
     return mawaqit_for_wilayas

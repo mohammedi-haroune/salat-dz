@@ -1,3 +1,8 @@
+regions:
+  djelfa: 'الجلفة'
+  alger: 'الجزائر'
+  adrar: 'أدرار'
+
 pdf_links:
   djelfa: 'https://www.marw.dz/media/calendrier/1442/djelfa.pdf'
   alger : 'https://www.marw.dz/media/calendrier/1442/alger.pdf'
@@ -9,7 +14,10 @@ pdf_paths:
   alger : 'assets/20-21/pdfs/alger.pdf'
   adrar : 'assets/20-21/pdfs/adrar.pdf'
 
-tabula_template: 'assets/20-21/tabula-templates/djelfa.json'
+tabula_templates:
+  djelfa: 'assets/20-21/tabula-templates/djelfa.json'
+  alger: 'assets/20-21/tabula-templates/alger.json'
+  adrar: 'assets/20-21/tabula-templates/adrar.json'
 
 wilayas_file: 'assets/wilayas.json'
 

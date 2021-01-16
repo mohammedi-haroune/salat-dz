@@ -1,4 +1,5 @@
 from datetime import date, datetime, time
+import logging
 
 from flask import Blueprint, Flask, abort
 from flask_restx import Api, Resource
@@ -16,13 +17,16 @@ from .utils import (
     read_wilayas_values,
 )
 
+logger = logging.getLogger(__name__)
+
 DZ = timezone('Africa/Algiers')
 
 mawaqit_for_wilayas = read_mawaqit_for_wilayas(settings.mawaqit_for_wilayas_dir)
 mawaqits = create_mawaqits(mawaqit_for_wilayas, settings.column_names.wilaya)
-wilayas_values = read_wilayas_values(settings.wilayas_file)
+# TODO: first check the names scrapped from wikipedia with thoese extracted from the pdfs
+# wilayas_values = read_wilayas_values(settings.wilayas_file)
 
-blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
+blueprint = Blueprint('apiv1', __name__, url_prefix='/api/v1')
 
 api = Api(
     blueprint,
@@ -61,7 +65,7 @@ args = {
     'days': fields.DelimitedList(fields.Date(), missing=None),
     'n_days': fields.TimeDelta(precision='days', missing=None),
     'n_weeks': fields.TimeDelta(precision='weeks', missing=None),
-    'wilayas': fields.DelimitedList(fields.Str(validate=validate.OneOf(wilayas_values)), missing=None),
+    'wilayas': fields.DelimitedList(fields.Str(), missing=None),
     'salawat': fields.DelimitedList(fields.Str(validate=validate.OneOf(settings.salawat_names + ['next', 'nexts'])), missing=None), 
     # TODO: add english salawat names
 }
@@ -79,7 +83,7 @@ args = {
 
 @parser.error_handler
 def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):
-    print(err, err.messages, req, schema, error_status_code, error_headers)
+    logger.error(err, err.messages, req, schema, error_status_code, error_headers)
     abort(400, err.messages)
 
 
@@ -95,12 +99,9 @@ class MawaqitList(Resource):
         global mawaqits
 
         today = datetime.now(tz=DZ).date()
-
-
         # from_, to, page, limit = parse_common_args(request)
         if not from_:
             from_ = today
-
 
         # TODO: Move it! Move it! to postprocess 
         if not to:
@@ -119,8 +120,8 @@ class MawaqitList(Resource):
             mawaqits = mawaqits[mawaqits[settings.column_names.date] <= to]
 
         if wilayas:
-            wilayas = get_codes(wilayas)
             mawaqits = mawaqits[mawaqits[settings.column_names.wilaya].isin(wilayas)]
+
         # TODO: paginate result
         mawaqits = mawaqits.head()
         return mawaqits.to_dict('records')
