@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Provides correct mawaqit based on official ministry website https://marw.dz">
+  <meta name="author" content="Mohammedi Haroune">
+  <title>Salat Dz</title>
+  <link rel="canonical" href="https://salat.pythonanywhere.com">
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+  </style>
+  <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet">
+</head>
+
+<body class="text-center">
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="masthead mb-auto">
+      <div class="inner">
+        <h3 class="masthead-brand">Salat Dz</h3>
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link active" href="#">Home</a>
+          <a class="nav-link" href="/api/v1" target="_blank">API Docs</a>
+          <a class="nav-link" href="mailto:mohammedi.haroun@gmail.com" target="_blank">Contact</a>
+          <a class="nav-link" href="https://github.com/mohammedi-haroune/salat-dz" target="_blank">Code</a>
+        </nav>
+      </div>
+    </header>
+
+    <main role="main" class="inner cover">
+      <br>
+      <h1>Mawaqit salat for wilaya</h1>
+
+      <select id="wilaya" class="selectpicker" data-live-search="true">
+        <option>بسكرة</option>
+      </select>
+
+      <br>
+      <br>
+      <div class="table-responsive">
+        <table id="mawaqit" class="table table-dark table-striped">
+          <thead>
+            <tr>
+              <th>Fajr</th>
+              <th>Chorok</th>
+              <th>Dhor</th>
+              <th>Asr</th>
+              <th>Maghrib</th>
+              <th>Icha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="fajr"></td>
+              <td id="chorok"></td>
+              <td id="dhohr"></td>
+              <td id="asr"></td>
+              <td id="maghrib"></td>
+              <td id="icha"></td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <p class="lead">
+        Data is extracted from official ministry website <a href="https://marw.dz" target="_blank">https://marw.dz</a>
+      </p>
+
+      <p class="lead">
+        <a href="https://github.com/mohammedi-haroune/salat-dz" target="_blank" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
+      </p>
+
+    </main>
+
+    <footer class="mastfoot mt-auto">
+      <div class="inner">
+        <p>Created with <3 by <a href="https://github.com/mohammedi-haroune" target="_blank" class="text-white">@mohammedi-haroune</a>.
+        </p>
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+    integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous">
+  </script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script> -->
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+
+</html>

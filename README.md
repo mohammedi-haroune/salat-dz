@@ -15,3 +15,4 @@ TODO:
 - Add /today/next endpoint
 - Add from=date, to=date args to routes
 - Add analytics to see how people are using it
+- Use OpenAPI 3.0, see this link for converting 2.0 specifications: https://stackoverflow.com/questions/59749513/how-to-convert-openapi-2-0-to-openapi-3-0
