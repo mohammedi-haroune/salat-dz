@@ -96,7 +96,7 @@ class MawaqitList(Resource):
     def get(self, from_, to, days, n_days, n_weeks, wilayas, salawat):
         '''List mawaqits'''
         print(f'Calling with {locals()}')
-        global mawaqits
+        query = mawaqits
 
         today = datetime.now(tz=DZ).date()
         # from_, to, page, limit = parse_common_args(request)
@@ -112,19 +112,22 @@ class MawaqitList(Resource):
             else:
                 to = today
 
-        if from_ == to == today:
-            mawaqits = mawaqits[mawaqits[settings.column_names.date] == today]
+        # Time Filtering
+        if days:
+            query = query[query[settings.column_names.date].isin(days)]
+        elif from_ == to == today:
+            query = query[query[settings.column_names.date] == today]
         elif from_:
-            mawaqits = mawaqits[from_ <= mawaqits[settings.column_names.date]]
+            query = query[from_ <= query[settings.column_names.date]]
         elif to:
-            mawaqits = mawaqits[mawaqits[settings.column_names.date] <= to]
-
+            query = query[query[settings.column_names.date] <= to]
+        # Filter wilayas
         if wilayas:
-            mawaqits = mawaqits[mawaqits[settings.column_names.wilaya].isin(wilayas)]
+            query = query[query[settings.column_names.wilaya].isin(wilayas)]
 
         # TODO: paginate result
-        mawaqits = mawaqits.head()
-        return mawaqits.to_dict('records')
+        query = query.head()
+        return query.to_dict('records')
 
 
 class Mawaqit(Resource):
