@@ -9,7 +9,7 @@ from flask_restx.fields import MarshallingError, Raw
 from datetime import datetime, time
 from webargs.core import ArgMap, Parser
 from werkzeug.routing import BaseConverter, ValidationError
-
+from geopy.geocoders import Nominatim
 import pandas as pd
 
 from .config import settings
@@ -110,3 +110,11 @@ class Time(Raw):
             return time.fromisoformat(value)
         else:
             raise ValueError("Unsupported Time format")
+
+
+def get_wilaya_from_geopos(latitude, longitude):
+    geolocator = Nominatim(user_agent=settings.user_agent)
+    address = geolocator.reverse(f'{latitude}, {longitude}')
+    state = address.raw['address']['state']
+    wilaya_ar = state.split()[-1]
+    return wilaya_ar

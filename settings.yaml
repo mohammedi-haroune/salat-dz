@@ -52,3 +52,5 @@ salawat_names:
 api:
   title: 'Mawaqit salat API'
   description: 'Provides correct Mawaqit extracted from ministry website https://marw.dz'
+
+user_agent: 'SalatDz/0.1'
