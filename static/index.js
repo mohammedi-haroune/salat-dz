@@ -81,6 +81,7 @@ $("#datepicker").change(refreshMawaqit);
 $("#find-my-wilaya").click(getWilayaFromLocation);
 
 $(function () {
+    getWilayaFromLocation();
     let today = formatDate(new Date());
     $("#datepicker").datepicker({
         uiLibrary: 'bootstrap4',
