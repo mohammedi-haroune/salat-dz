@@ -25,6 +25,7 @@ mawaqit_for_wilayas = read_mawaqit_for_wilayas(settings.mawaqit_for_wilayas_dir)
 mawaqits = create_mawaqits(mawaqit_for_wilayas, settings.column_names.wilaya)
 # TODO: first check the names scrapped from wikipedia with thoese extracted from the pdfs
 # wilayas_values = read_wilayas_values(settings.wilayas_file)
+wilayas_values = list(mawaqit_for_wilayas.keys())
 
 blueprint = Blueprint('apiv1', __name__, url_prefix='/api/v1')
 
@@ -65,8 +66,9 @@ args = {
     'days': fields.DelimitedList(fields.Date(), missing=None),
     'n_days': fields.TimeDelta(precision='days', missing=None),
     'n_weeks': fields.TimeDelta(precision='weeks', missing=None),
-    'wilayas': fields.DelimitedList(fields.Str(), missing=None),
+    'wilayas': fields.DelimitedList(fields.Str(validate=validate.OneOf(wilayas_values)), missing=None),
     'salawat': fields.DelimitedList(fields.Str(validate=validate.OneOf(settings.salawat_names + ['next', 'nexts'])), missing=None), 
+    # TODO: Add latitude and longitude
     # TODO: add english salawat names
 }
 # TODO: add the query parameters to the swagger ui, see: 
@@ -121,9 +123,11 @@ class MawaqitList(Resource):
             query = query[from_ <= query[settings.column_names.date]]
         elif to:
             query = query[query[settings.column_names.date] <= to]
+
         # Filter wilayas
         if wilayas:
             query = query[query[settings.column_names.wilaya].isin(wilayas)]
+
 
         # TODO: paginate result
         query = query.head()
