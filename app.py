@@ -1,14 +1,25 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_cors import CORS
 
 from salat_dz.apiv1 import blueprint as apiv1
-from salat_dz.apiv1 import wilayas_values
+from salat_dz.base import blueprint as base
+
+
+def register_blueprints(app):
+    app.register_blueprint(apiv1)
+    app.register_blueprint(base)
+    return app
+
+
+def register_extensions(app):
+    CORS(app)
+    return app
+
 
 def create_app():
     app = Flask(__name__)
-    CORS(app)
-    app.add_url_rule('/', 'index', lambda : render_template('index.html', wilayas=wilayas_values))
-    app.register_blueprint(apiv1)
+    app = register_blueprints(app)
+    app = register_extensions(app)
     return app
 
 app = create_app()

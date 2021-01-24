@@ -8,6 +8,7 @@
   <meta name="author" content="Mohammedi Haroune">
   <title>Salat Dz</title>
   <link rel="canonical" href="https://salat.pythonanywhere.com">
+  <link rel=icon href="{{ url_for('static', filename='favicon.ico') }}">
 
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
@@ -47,12 +48,17 @@
             <div class="input-group mb-3">
               <select id="wilaya" class="form-control selectpicker" data-live-search="true">
                 {% for wilaya in wilayas %}
-                <option>{{ wilaya }}</option>
+                <option {% if wilaya == saved_wilaya %} selected {% endif %}>{{ wilaya }}</option>
                 {% endfor %}
               </select>
               <span class="input-group-append" role="right-icon">
                 <button id="find-my-wilaya" class="btn btn-outline-secondary border-left-0" type="button">
                   <i class="fas fa-compass"></i>
+                </button>
+              </span>
+              <span class="input-group-append" role="right-icon">
+                <button id="save-my-wilaya" class="btn btn-outline-secondary border-left-0" type="button">
+                  <i class="fas fa-save"></i>
                 </button>
               </span>
             </div>
@@ -97,6 +103,18 @@
         <a href="https://github.com/mohammedi-haroune/salat-dz" target="_blank"
           class="btn btn-lg btn-secondary fw-bold border-white bg-white">Learn more</a>
       </p>
+
+
+      <div class="d-flex justify-content-center align-items-center" aria-live="polite" aria-atomic="true">
+        <div id="saved-toast" class="toast">
+          <div class="toast-header">
+            Wilaya saved successfully !
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </div>
 
     </main>
 

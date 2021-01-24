@@ -148,3 +148,8 @@ body {
 .gj-icon {
   font-size: auto;
 }
+
+#saved-toast {
+  position: absolute;
+  top: 1rem;
+}

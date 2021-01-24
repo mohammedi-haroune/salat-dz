@@ -1,4 +1,5 @@
 const API_URL = "/api/v1/mawaqit";
+const SAVE_URL = "/save";
 const SALAWAT_NAMES = {
     "fajr": "الفجر",
     "chorok": "الشروق",
@@ -28,6 +29,26 @@ async function fetchOneMawaqit(params) {
     let mawaqit = mawaqit_list[0];
     return mawaqit;
 }
+
+
+async function saveWilaya() {
+    let wilaya = $("#wilaya").val();
+    let searchParams = new URLSearchParams({ wilaya: wilaya });
+    let url = SAVE_URL + "?" + searchParams.toString();
+
+    try {
+        const response = await fetch(url);
+        if (response.ok) {
+            $("#saved-toast").toast('show');
+            console.log("Wilaya", wilaya, "saved, response:", response);
+        } else {
+            console.error(response);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 
 function updateMawaqit(mawaqit, salawat = SALAWAT_NAMES) {
     for (const salat in salawat) {
@@ -79,9 +100,9 @@ formatDate = (date) => date.toISOString().substring(0, 10);
 $("#wilaya").change(refreshMawaqit);
 $("#datepicker").change(refreshMawaqit);
 $("#find-my-wilaya").click(getWilayaFromLocation);
+$("#save-my-wilaya").click(saveWilaya);
 
 $(function () {
-    getWilayaFromLocation();
     let today = formatDate(new Date());
     $("#datepicker").datepicker({
         uiLibrary: 'bootstrap4',
@@ -89,4 +110,5 @@ $(function () {
         value: today,
     });
     refreshMawaqit();
+    $('#saved-toast').toast({delay: 2000});
 });
