@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 from datetime import datetime
 from marshmallow.fields import Field
 from pytz import timezone
@@ -14,6 +15,8 @@ import pandas as pd
 
 from .config import settings
 from .reader import str_to_date
+
+logger = logging.getLogger(__name__)
 
 
 DZ = timezone('Africa/Algiers')
@@ -118,3 +121,44 @@ def get_wilaya_from_geopos(latitude, longitude):
     state = address.raw['address']['state']
     wilaya_ar = state.split()[-1]
     return wilaya_ar
+
+
+def get_settings(key, language='ar'):
+    if language == 'ar':
+        language = ''
+
+    if language:
+        key = f'{key}_{language}'
+
+    return getattr(settings, key, None)
+
+
+def translate(name, from_='ar', to='en'):
+    if from_ == to:
+        return name
+
+    settings_keys = ['column_names', 'salawat']
+    translated = None
+    for settings_key in settings_keys:
+        settings_value = get_settings(settings_key, from_)
+        # Make sure the settings_value is a dict
+        try:
+            dict(settings_value)
+        except ValueError:
+            logger.warning(f'translate: settings_value of {settings_key} is not dict')
+            continue
+
+        value_to_key = {value: key for key, value in settings_value.items()}
+        if name in value_to_key:
+            key = value_to_key[name]
+            translation = get_settings(settings_key, to)
+            if translation:
+                translated = getattr(translation, key, None)
+                break
+
+    if not translated:
+        logger.warning(f'Cannot translate {name} from {from_} to {to}')
+    else:
+        logger.info(f'{name} translated from {from_} to {to}: {translated}')
+
+    return translated

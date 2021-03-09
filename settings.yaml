@@ -33,6 +33,16 @@ column_names:
   salat_name: 'صلاة'
   salat_time: 'الوقت'
 
+column_names_en:
+  diff: 'diff'
+  date: 'date'
+  qibla: 'qibla'
+  zawal: 'zawal'
+  dhohr: 'dhohr'
+  wilaya: 'wilaya'
+  salat_name: 'salat_name'
+  salat_time: 'salat_time'
+  
 salawat:
   fajr: 'الفجر'
   chorok: 'الشروق'
@@ -41,6 +51,14 @@ salawat:
   maghrib: 'المغرب'
   icha: 'العشاء'
 
+salawat_en:
+  fajr: 'fajr'
+  chorok: 'chorok'
+  dhohr: 'dhohr'
+  asr: 'asr'
+  maghrib: 'maghrib'
+  icha: 'icha'
+
 salawat_names:
   - 'الفجر'
   - 'الشروق'
@@ -48,6 +66,14 @@ salawat_names:
   - 'العصر'
   - 'المغرب'
   - 'العشاء'
+
+salawat_names_en:
+  - 'fajr'
+  - 'chorok'
+  - 'dhohr'
+  - 'asr'
+  - 'maghrib'
+  - 'icha'
 
 api:
   title: 'Mawaqit salat API'
