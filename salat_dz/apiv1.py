@@ -100,7 +100,7 @@ args = {
 
 @parser.error_handler
 def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):
-    logger.error(err, err.messages, req, schema, error_status_code, error_headers)
+    logger.error(f'Parsing error: {err.messages} during request={req} with schema={schema}, error_status_code={error_status_code}')
     abort(400, err.messages)
 
 
