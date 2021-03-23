@@ -75,6 +75,19 @@ salawat_names_en:
   - 'maghrib'
   - 'icha'
 
+# Arabic is RTL, keys are on the right, values on the left
+rename:
+  'عين  تموشنت': 'عين تموشنت'
+  'ب.بوعريريج': 'برج بوعريريج'
+  'إليزي': 'اليزي'
+  'عين قزام': 'عين قزّام'
+  'ب.ب . مختار': 'برج باجي مختار'
+  'سيدي  بلعباس': 'سيدي بلعباس'
+  'تميمون': 'تيميمون'
+  'س.أهراس': 'سوق أهراس'
+  'تيسمسيلت': 'تسمسيلت'
+
+
 api:
   title: 'Mawaqit salat API'
   description: 'Provides correct Mawaqit extracted from ministry website https://marw.dz'

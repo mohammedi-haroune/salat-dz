@@ -1,7 +1,9 @@
+from operator import itemgetter
 import os
 import json
 import logging
 from datetime import datetime
+from typing import Iterable, List
 from marshmallow.fields import Field
 from pytz import timezone
 from pathlib import Path
@@ -12,6 +14,7 @@ from webargs.core import ArgMap, Parser
 from werkzeug.routing import BaseConverter, ValidationError
 from geopy.geocoders import Nominatim
 import pandas as pd
+import Levenshtein as lev
 
 from .config import settings
 from .reader import str_to_date
@@ -55,12 +58,72 @@ def read_mawaqit_for_wilayas(directory):
     return mawaqit_for_wilayas
 
 
-def read_wilayas_values(path):
-    # TODO: check names got from the json file and those from the pdfs
-    with open(path) as f:
-        wilayas = json.load(f)
+def read_wilayas():
+    with open(settings.wilayas_file) as f:
+        return json.load(f)
+
+
+def get_wilaya(code_or_name: str, wilayas: Iterable[dict] = None):
+    if wilayas is None:
+        wilayas = read_wilayas()
+
+    # convert the names found in the ministry PDFs to the ones found on wikipedia
+    if code_or_name in settings.rename:
+        code_or_name = settings.rename.get(code_or_name)
+
+    for wilaya in wilayas:
+        # TODO: don't stric compare, use a less rigirous way to handle the naming
+        # diffrences between data got from marw.dz and the one got from wikipedia.com
+        if code_or_name in wilaya.values():
+            return wilaya
+
+    return {
+        'code': code_or_name,
+        'arabic_name': code_or_name,
+        'english_name': code_or_name,
+    }
+
+
+def look_for_rename(old_names: List[str], wilayas: Iterable[dict], path: str):
+    rename = {}
+    for old_name in old_names:
+        closest_name, _ = best_match(old_name, [wilaya['arabic_name'] for wilaya in wilayas])
+        rename[old_name] = closest_name
+
+    with open(path, 'w') as f:
+        output = 'rename:\n'
+        for x1, x2 in rename.items():
+            output = output + f"  '{x1}': '{x2}'\n"
+        f.write(output)
+
+
+def best_match(name: str, names: Iterable[str]):
+    distances = []
+    for other_name in names:
+        distance = lev.distance(name, other_name)
+        distances.append((other_name, distance))
+
+    best, minimum_distance = min(distances, key=itemgetter(1))
+    return best, minimum_distance
+
+
+
+def read_mawaqit_for_wilayas_v2(directory):
+    mawaqit_for_wilayas = []
+    for f in os.listdir(directory):
+        path = os.path.join(directory, f)
+        arabic_name = Path(path).stem
+
+        wilaya = get_wilaya(arabic_name)
+
+        mawaqit_for_wilayas.append((wilaya, pd.read_csv(path, index_col=False)))
+       
+    return mawaqit_for_wilayas
+
+
+def get_wilayas_values(wilayas):
     arabic_names = [w['arabic_name'] for w in wilayas]
-    french_names = [w['french_name'] for w in wilayas]
+    french_names = [w['english_name'] for w in wilayas]
     codes = [w['code'] for w in wilayas]
     accepted_values = arabic_names + french_names + codes
     return accepted_values
@@ -78,6 +141,20 @@ def create_mawaqits(mawaqit_for_wilayas, wilaya_column_name):
     mawaqits[settings.column_names.date] = mawaqits[settings.column_names.date].apply(str_to_date)
     mawaqits.index = mawaqits[settings.column_names.date]
     return mawaqits
+
+
+def create_mawaqits_v2(mawaqit_for_wilayas, wilaya_column_name):
+    dfs = []
+    for wilaya, mawaqit in mawaqit_for_wilayas:
+        mawaqit[wilaya_column_name] = [wilaya]*len(mawaqit)
+        dfs.append(mawaqit)
+
+    mawaqits = pd.concat(dfs)
+
+    mawaqits[settings.column_names.date] = mawaqits[settings.column_names.date].apply(str_to_date)
+    mawaqits.index = mawaqits[settings.column_names.date]
+    return mawaqits
+
 
 
 class Time(Raw):

@@ -6,3 +6,4 @@ python-dotenv
 webargs~=7.0.1
 geopy~=2.1.0
 Flask-Cors~=3.0.10
+python-Levenshtein==0.12.2
