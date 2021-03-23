@@ -15,7 +15,6 @@ from .utils import (
     argmap_to_swagger_params,
     create_mawaqits,
     read_mawaqit_for_wilayas,
-    read_wilayas_values,
     translate,
 )
 
@@ -25,10 +24,8 @@ DZ = timezone('Africa/Algiers')
 
 mawaqit_for_wilayas = read_mawaqit_for_wilayas(settings.mawaqit_for_wilayas_dir)
 mawaqits = create_mawaqits(mawaqit_for_wilayas, settings.column_names.wilaya)
-# TODO: first check the names scrapped from wikipedia with thoese extracted from the pdfs
-# wilayas_values = read_wilayas_values(settings.wilayas_file)
 wilayas_values = list(mawaqit_for_wilayas.keys())
-salawat_values = settings.salawat_names + settings.salawat_names_en + ['next', 'nexts']
+salawat_values = settings.salawat_names + settings.salawat_names_en
 
 
 blueprint = Blueprint('apiv1', __name__, url_prefix='/api/v1')
@@ -168,7 +165,7 @@ class MawaqitList(Resource):
 
 @ns.route(f'/en')
 class MawaqitListEn(Resource):
-    '''Shows a list of all mawaqits'''
+    '''Shows a list of all mawaqits in english'''
     @use_kwargs(args, location='query')
     @ns.doc('list_mawaqits', params=argmap_to_swagger_params(args))
     @ns.marshal_list_with(mawaqit_en)
@@ -184,34 +181,14 @@ class MawaqitListEn(Resource):
             language='en',
         )
 
-class Mawaqit(Resource):
-    '''Show a single mawaqit item and lets you delete them'''
-    @ns.doc('get_mawaqit')
-    @ns.marshal_with(mawaqit)
-    def get(self, wilaya):
-        '''Fetch a given resource'''
-        mawaqit = mawaqit_for_wilayas[wilaya]
-        mawaqit[settings.column_names.wilaya] = wilaya
-        mawaqit = mawaqit.head()
-        response = mawaqit.to_dict('records')
-        return response
 
-class MawaqitToday(Resource):
-    '''Show a single mawaqit item and lets you delete them'''
-    @ns.doc('get_mawaqit')
-    @ns.marshal_with(mawaqit)
-    def get(self, wilaya):
-        '''Fetch a given resource'''
-        mawaqit = mawaqit_for_wilayas[wilaya]
-        mawaqit[settings.column_names.wilaya] = wilaya
-        today = str(date.today())
-        print('Today', today)
-
-        mawaqit = mawaqit[mawaqit[settings.column_names.date] == today]
-        print('mawaqit', mawaqit)
-
-        response = mawaqit.to_dict('records')[0]
-        return response
+def next_salawat(mawaqit, n=1):
+    dt_now = datetime.now(tz=DZ)
+    now = dt_now.time()
+    nexts = []
+    for salat_name, salat_time in mawaqit.items():
+        if time.fromisoformat(salat_time) > now and len(nexts) < n:
+            nexts.append(salat_name)
 
 
 class NextSalat(Resource):
