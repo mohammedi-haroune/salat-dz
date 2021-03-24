@@ -151,5 +151,5 @@ body {
 
 #saved-toast {
   position: absolute;
-  top: 1rem;
+  bottom: 1rem;
 }
