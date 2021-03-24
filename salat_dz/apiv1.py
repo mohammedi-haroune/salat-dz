@@ -26,7 +26,7 @@ DZ = timezone('Africa/Algiers')
 mawaqit_for_wilayas = read_mawaqit_for_wilayas(settings.mawaqit_for_wilayas_dir)
 mawaqits = create_mawaqits(mawaqit_for_wilayas, settings.column_names.wilaya)
 wilayas_values = list(mawaqit_for_wilayas.keys())
-salawat_values = settings.salawat_names + settings.salawat_names_en + ['next', 'nexts']
+salawat_values = settings.salawat_names + ['next', 'nexts']
 
 
 blueprint = Blueprint('apiv1', __name__, url_prefix='/api/v1')
