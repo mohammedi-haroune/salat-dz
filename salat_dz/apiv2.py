@@ -20,6 +20,7 @@ from .utils import (
     read_wilayas,
     get_wilayas_values,
     translate,
+    next_salawat,
 )
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,7 @@ mawaqits = create_mawaqits_v2(mawaqit_for_wilayas, settings.column_names.wilaya)
 # wilayas_values = list(mawaqit_for_wilayas.keys())
 wilayas = read_wilayas()
 wilayas_values = get_wilayas_values(wilayas)
-salawat_values = settings.salawat_names + settings.salawat_names_en
+salawat_values = settings.salawat_names + ['next', 'nexts']
 
 
 
@@ -140,6 +141,17 @@ def list_mawaqit(from_, to, days, n_days, n_weeks, wilayas, salawat, language='a
             queries.append(query[query[settings.column_names.wilaya] == wilaya])
         query = pd.concat(queries)
 
+    if salawat:
+        if salawat == ['next'] or salawat == ['nexts']:
+            mawaqit_dict = {
+                key: value for key, value in query.iloc[0].to_dict().items()
+                    if key in settings.salawat_names
+            }
+            n = 1 if salawat == ['next'] else None # None means get all next mawaqit
+            salawat = next_salawat(mawaqit_dict, n=n)
+        columns = salawat + [settings.column_names.date, settings.column_names.wilaya]
+        query = query[columns]
+
     # TODO: paginate result
     query = query.head()
 
@@ -155,7 +167,7 @@ class MawaqitList(Resource):
     '''Shows a list of all mawaqits'''
     @use_kwargs(args, location='query')
     @ns.doc('list_mawaqits', params=argmap_to_swagger_params(args))
-    @ns.marshal_list_with(mawaqit)
+    @ns.marshal_list_with(mawaqit, skip_none=True)
     def get(self, from_, to, days, n_days, n_weeks, wilayas, salawat):
         return list_mawaqit(
             from_=from_,

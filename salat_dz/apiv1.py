@@ -1,8 +1,8 @@
-from datetime import date, datetime, time
+from datetime import datetime, time
 from functools import partial
 import logging
 
-from flask import Blueprint, Flask, abort
+from flask import Blueprint, abort
 from flask_restx import Api, Resource
 from flask_restx.fields import Date, String
 from pytz import timezone
@@ -16,6 +16,7 @@ from .utils import (
     create_mawaqits,
     read_mawaqit_for_wilayas,
     translate,
+    next_salawat,
 )
 
 logger = logging.getLogger(__name__)
@@ -25,7 +26,7 @@ DZ = timezone('Africa/Algiers')
 mawaqit_for_wilayas = read_mawaqit_for_wilayas(settings.mawaqit_for_wilayas_dir)
 mawaqits = create_mawaqits(mawaqit_for_wilayas, settings.column_names.wilaya)
 wilayas_values = list(mawaqit_for_wilayas.keys())
-salawat_values = settings.salawat_names + settings.salawat_names_en
+salawat_values = settings.salawat_names + settings.salawat_names_en + ['next', 'nexts']
 
 
 blueprint = Blueprint('apiv1', __name__, url_prefix='/api/v1')
@@ -134,6 +135,17 @@ def list_mawaqit(from_, to, days, n_days, n_weeks, wilayas, salawat, language='a
     if wilayas:
         query = query[query[settings.column_names.wilaya].isin(wilayas)]
 
+    if salawat:
+        if salawat == ['next'] or salawat == ['nexts']:
+            mawaqit_dict = {
+                key: value for key, value in query.iloc[0].to_dict().items()
+                    if key in settings.salawat_names
+            }
+            n = 1 if salawat == ['next'] else None # None means get all next mawaqit
+            salawat = next_salawat(mawaqit_dict, n=n)
+        columns = salawat + [settings.column_names.date, settings.column_names.wilaya]
+        query = query[columns]
+
     # TODO: paginate result
     query = query.head()
 
@@ -149,7 +161,7 @@ class MawaqitList(Resource):
     '''Shows a list of all mawaqits'''
     @use_kwargs(args, location='query')
     @ns.doc('list_mawaqits', params=argmap_to_swagger_params(args))
-    @ns.marshal_list_with(mawaqit)
+    @ns.marshal_list_with(mawaqit, skip_none=True)
     def get(self, from_, to, days, n_days, n_weeks, wilayas, salawat):
         return list_mawaqit(
             from_=from_,
@@ -168,7 +180,7 @@ class MawaqitListEn(Resource):
     '''Shows a list of all mawaqits in english'''
     @use_kwargs(args, location='query')
     @ns.doc('list_mawaqits', params=argmap_to_swagger_params(args))
-    @ns.marshal_list_with(mawaqit_en)
+    @ns.marshal_list_with(mawaqit_en, skip_none=True)
     def get(self, from_, to, days, n_days, n_weeks, wilayas, salawat):
         return list_mawaqit(
             from_=from_,
@@ -181,14 +193,6 @@ class MawaqitListEn(Resource):
             language='en',
         )
 
-
-def next_salawat(mawaqit, n=1):
-    dt_now = datetime.now(tz=DZ)
-    now = dt_now.time()
-    nexts = []
-    for salat_name, salat_time in mawaqit.items():
-        if time.fromisoformat(salat_time) > now and len(nexts) < n:
-            nexts.append(salat_name)
 
 
 class NextSalat(Resource):

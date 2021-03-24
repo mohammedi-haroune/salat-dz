@@ -3,7 +3,7 @@ import os
 import json
 import logging
 from datetime import datetime
-from typing import Iterable, List
+from typing import Iterable, List, Optional
 from marshmallow.fields import Field
 from pytz import timezone
 from pathlib import Path
@@ -239,3 +239,18 @@ def translate(name, from_='ar', to='en'):
         logger.info(f'{name} translated from {from_} to {to}: {translated}')
 
     return translated
+
+
+def next_salawat(mawaqit: dict, n: Optional[int] = 1):
+    dt_now = datetime.now(tz=DZ)
+    now = dt_now.time()
+
+    nexts = []
+    for salat_name, salat_time in mawaqit.items():
+        if time.fromisoformat(salat_time) > now:
+            nexts.append(salat_name)
+
+        if n and len(nexts) == n:
+            break
+
+    return nexts
