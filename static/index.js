@@ -8,6 +8,8 @@ const SALAWAT_NAMES = {
     "maghrib": "المغرب",
     "icha": "العشاء"
 };
+const DATE_COLUMN = "الموافق";
+const WILAYA_COLUMN = "الولاية";
 const DATE_FORMAT = "yyyy-mm-dd";
 const GEO_API_URL = "https://nominatim.openstreetmap.org/reverse";
 
@@ -22,7 +24,7 @@ async function fetchOneMawaqit(params) {
     let url = API_URL + "?" + searchParams.toString();
 
     let response = await fetch(url)
-        .catch(function(error) {
+        .catch(function (error) {
             console.error(error);
         });
     let mawaqit_list = await response.json();
@@ -30,6 +32,23 @@ async function fetchOneMawaqit(params) {
     return mawaqit;
 }
 
+async function fetchNextSalat(wilaya) {
+    let params = {
+        wilayas: wilaya,
+        salawat: 'next',
+    };
+    let mawaqit = await fetchOneMawaqit(params);
+
+    delete mawaqit[DATE_COLUMN];
+    delete mawaqit[WILAYA_COLUMN];
+
+    let keys = Object.keys(mawaqit);
+    if (keys.length == 1) {
+        return keys[0];
+    } else {
+        return undefined;
+    }
+}
 
 async function saveWilaya() {
     let wilaya = $("#wilaya").val();
@@ -49,10 +68,58 @@ async function saveWilaya() {
     }
 }
 
+function dateDiff(d1, d2) {
+    let DateDiff = {
+        minutes: function (d1, d2) {
+            var t1 = d1.getTime();
+            var t2 = d2.getTime();
+            return parseInt((t2 - t1) / 60000);
+        },
 
-function updateMawaqit(mawaqit, salawat = SALAWAT_NAMES) {
-    for (const salat in salawat) {
-        $(`#${salat}`).text(mawaqit[salawat[salat]]);
+        hours: function (d1, d2) {
+            var t1 = d1.getTime();
+            var t2 = d2.getTime();
+            return parseInt((t2 - t1) / 3600000);
+        }
+    };
+
+    var duration = "";
+
+    var minutes = DateDiff.minutes(d1, d2);
+    var hours = DateDiff.hours(d1, d2);
+
+    if (minutes >= 60) {
+        duration = `${hours}h`;
+
+        minutes = minutes - hours * 60;
+        if (minutes > 0) {
+            duration = duration + `${minutes}m`;
+        }
+    } else {
+        duration = `${minutes}m`;
+    }
+
+    return duration;
+}
+
+function updateMawaqit(mawaqit, nextSalat = undefined, salawat = SALAWAT_NAMES) {
+    for (const englishName in salawat) {
+        let arabicName = salawat[englishName];
+        $(`#${englishName}`).text(mawaqit[arabicName]);
+
+        if (arabicName == nextSalat) {
+            let now = new Date();
+
+            let [hours, minutes] = mawaqit[arabicName].split(':');
+            let date = new Date(now.getTime());
+            date.setHours(hours);
+            date.setMinutes(minutes);
+
+            let duration = dateDiff(now, date);
+
+            let text = $(`#${englishName}`).text() + ` (${duration})`;
+            $(`#${englishName}`).text(text);
+        }
     }
 }
 
@@ -67,7 +134,8 @@ async function refreshMawaqit() {
     if (JSON.stringify(params) !== JSON.stringify(current_params)) {
         console.log('Updating mawaqit for', params);
         let mawaqit = await fetchOneMawaqit(params);
-        updateMawaqit(mawaqit);
+        let nextSalat = await fetchNextSalat(wilaya);
+        updateMawaqit(mawaqit, nextSalat = nextSalat);
         current_params = params;
     }
 }
@@ -83,7 +151,7 @@ function getWilayaFromLocation() {
             });
             let url = GEO_API_URL + '?' + params.toString();
             let response = await fetch(url)
-                .catch(function(error) {
+                .catch(function (error) {
                     console.error(error);
                 });
             let response_object = await response.json();
@@ -110,5 +178,5 @@ $(function () {
         value: today,
     });
     refreshMawaqit();
-    $('#saved-toast').toast({delay: 2000});
+    $('#saved-toast').toast({ delay: 2000 });
 });
