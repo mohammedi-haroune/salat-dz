@@ -192,32 +192,3 @@ class MawaqitListEn(Resource):
             salawat=salawat,
             language='en',
         )
-
-
-
-class NextSalat(Resource):
-    @ns.doc('get_next')
-    def get(self, wilaya):
-        mawaqit = mawaqit_for_wilayas[wilaya]
-        mawaqit[settings.column_names.wilaya] = wilaya
-        
-        dt_now = datetime.now(tz=DZ)
-        today = str(dt_now.date())
-        now = dt_now.time()
-        
-        mawaqit = mawaqit[mawaqit[settings.column_names.date] == today]
-
-        # TODO: Check if nothing is found and return propre error
-        mawaqit = mawaqit[settings.salawat_names].iloc[0]
-
-        for salat_name, salat_time in mawaqit.items():
-            if time.fromisoformat(salat_time) > now:
-                break
-
-        response = {
-            settings.column_names.wilaya: wilaya,
-            settings.column_names.date: today,
-            settings.column_names.salat_name: salat_name,
-            settings.column_names.salat_time: salat_time,
-        }
-        return response
