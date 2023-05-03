@@ -117,7 +117,7 @@ def read_mawaqit_for_wilayas_v2(directory):
         wilaya = get_wilaya(arabic_name)
 
         mawaqit_for_wilayas.append((wilaya, pd.read_csv(path, index_col=False)))
-       
+
     return mawaqit_for_wilayas
 
 
@@ -127,7 +127,7 @@ def get_wilayas_values(wilayas):
     codes = [w['code'] for w in wilayas]
     accepted_values = arabic_names + french_names + codes
     return accepted_values
-    
+
 
 
 def create_mawaqits(mawaqit_for_wilayas, wilaya_column_name):
@@ -138,8 +138,10 @@ def create_mawaqits(mawaqit_for_wilayas, wilaya_column_name):
 
     mawaqits = pd.concat(dfs)
 
-    mawaqits[settings.column_names.date] = mawaqits[settings.column_names.date].apply(str_to_date)
-    mawaqits.index = mawaqits[settings.column_names.date]
+    date_column = mawaqits.columns[0]
+
+    mawaqits[date_column] = mawaqits[date_column].apply(str_to_date)
+    mawaqits.index = mawaqits[date_column]
     return mawaqits
 
 
@@ -151,8 +153,10 @@ def create_mawaqits_v2(mawaqit_for_wilayas, wilaya_column_name):
 
     mawaqits = pd.concat(dfs)
 
-    mawaqits[settings.column_names.date] = mawaqits[settings.column_names.date].apply(str_to_date)
-    mawaqits.index = mawaqits[settings.column_names.date]
+    date_column = mawaqits.columns[0]
+
+    mawaqits[date_column] = mawaqits[date_column].apply(str_to_date)
+    mawaqits.index = mawaqits[date_column]
     return mawaqits
 
 

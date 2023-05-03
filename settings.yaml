@@ -4,28 +4,28 @@ regions:
   adrar: 'أدرار'
 
 pdf_links:
-  djelfa: 'https://www.marw.dz/media/calendrier/1442/djelfa.pdf'
-  alger : 'https://www.marw.dz/media/calendrier/1442/alger.pdf'
-  adrar : 'https://www.marw.dz/media/calendrier/1442/adrar.pdf'
+  djelfa: 'https://www.marw.dz/media/calendrier/1444/djelfa.pdf'
+  alger : 'https://www.marw.dz/media/calendrier/1444/alger.pdf'
+  adrar : 'https://www.marw.dz/media/calendrier/1444/adrar.pdf'
 
 
 pdf_paths:
-  djelfa: 'assets/20-21/pdfs/djelfa.pdf'
-  alger : 'assets/20-21/pdfs/alger.pdf'
-  adrar : 'assets/20-21/pdfs/adrar.pdf'
+  djelfa: 'assets/1444/pdfs/djelfa.pdf'
+  # alger : 'assets/20-21/pdfs/alger.pdf'
+  # adrar : 'assets/20-21/pdfs/adrar.pdf'
 
 tabula_templates:
-  djelfa: 'assets/20-21/tabula-templates/djelfa.json'
-  alger: 'assets/20-21/tabula-templates/alger.json'
-  adrar: 'assets/20-21/tabula-templates/adrar.json'
+  djelfa: 'assets/1444/tabula-templates/djelfa.json'
+  # alger: 'assets/20-21/tabula-templates/alger.json'
+  # adrar: 'assets/20-21/tabula-templates/adrar.json'
 
 wilayas_file: 'assets/wilayas.json'
 
-mawaqit_for_wilayas_dir: 'assets/20-21/mawaqit'
+mawaqit_for_wilayas_dir: 'assets/1444/mawaqit'
 
 column_names:
   diff: 'الفروق'
-  date: 'الموافق'
+  date: 'Unnamed: 0'
   qibla: 'القبلة'
   zawal: 'الزوال'
   dhohr: 'الظهر'
@@ -42,7 +42,7 @@ column_names_en:
   wilaya: 'wilaya'
   salat_name: 'salat_name'
   salat_time: 'salat_time'
-  
+
 salawat:
   fajr: 'الفجر'
   chorok: 'الشروق'

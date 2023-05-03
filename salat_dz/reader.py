@@ -19,20 +19,28 @@ def grouped(iterable: Iterable[T], n=2) -> Iterable[Tuple[T, ...]]:
     return zip(*[iter(iterable)] * n)
 
 
+
 def str_to_date(s):
     # in the djelfa.pdf there a typo in this day, see page number 10
-    if s == '2020-04-17':
-        s = '2021-04-17'
-    if s == '03-09-2020':
-        s = '2020-09-03'
+    date_typos = {
+        '2020-04-17': '2021-04-17',
+        '03-09-2020': '2020-09-03',
+        '202304/25': '2023/04/25',
+        '202/305/19': '2023/05/19',
+        '202/305/24': '2023/05/24',
+    }
+
+    if s in date_typos:
+        s = date_typos[s]
     return date.fromisoformat(s.replace('/', '-'))
 
 
 def preprocess_mawaqit(mawaqit: pd.DataFrame) -> pd.DataFrame:
     logger.debug('Preprocessing mawaqit')
     assert mawaqit.shape == (29, 8) or mawaqit.shape == (30, 8), f'Mawaqit DataFrame should be of shape (29, 8) or (30, 8) not {mawaqit.shape}\n{mawaqit}'
-    mawaqit.index = mawaqit[settings.column_names.date].apply(str_to_date)
-    mawaqit = mawaqit.drop(settings.column_names.date, axis=1)
+    date_column = mawaqit.columns[-1]
+    mawaqit.index = mawaqit[date_column].apply(str_to_date)
+    mawaqit = mawaqit.drop(date_column, axis=1)
     mawaqit = mawaqit.drop(settings.column_names.qibla, axis=1)
     mawaqit = mawaqit.rename(columns={settings.column_names.zawal: settings.column_names.dhohr})
     mawaqit = mawaqit.applymap(time.fromisoformat)
@@ -47,17 +55,26 @@ def time_plus_timedelta(t: time, td: timedelta) -> timedelta:
 
 
 def timedelta_from_minutes(minutes: Union[int, str]) -> timedelta:
+    if not isinstance(minutes, (int, str)):
+        return minutes
+
+    if isinstance(minutes, str):
+        if minutes.endswith("+"):
+            minutes = minutes[:2]
+
     return timedelta(minutes=int(minutes))
 
 
 def preprocess_diffs(diffs: pd.DataFrame) -> pd.DataFrame:
     logger.debug('Preprocessing diffs')
+    # print(diffs)
     [diff_column] = [c for c in diffs.columns if settings.column_names.diff in c]
     salawat_names = diffs[diff_column].values.tolist()
     diffs = diffs.drop(diff_column, axis=1)
     diffs.index = salawat_names
     diffs = diffs.applymap(timedelta_from_minutes)
     diffs = diffs.reindex(settings.salawat_names, axis=0)
+    # print(diffs)
     return diffs
 
 
@@ -82,7 +99,7 @@ def preprocess_diffs_adrar(diffs: pd.DataFrame) -> Dict[tuple, pd.DataFrame]:
     first_row = diffs.iloc[0][:17]
     for c1, c2 in zip(columns, first_row):
         fixed_columns.append(fix_column_name(c1, c2))
-    
+
     diffs = diffs.iloc[1:]
 
     part1 = diffs[diffs.columns[:17]]
@@ -127,8 +144,12 @@ def construct_mawaqit_for_wilayas(tables: list, region: str) -> dict:
         for (from_, to), diffs in diffs_map.items():
             mawaqit_from_to = mawaqit.iloc[from_: to]
             diffs = add_region_to_diffs(diffs, region)
-            for wilaya, diff in diffs.iteritems():
+            for wilaya, diff in diffs.items():
+                if wilaya.startswith("Unnamed"):
+                    continue
+
                 logger.debug(f'Processing wilaya {wilaya:12s} from {mawaqit_from_to.index.min()} to {mawaqit_from_to.index.max()}')
+
                 mawaqit_wilaya = mawaqit_from_to.apply(lambda row: row.combine(diff, time_plus_timedelta), axis=1)
                 if wilaya in mawaqit_for_wilayas:
                     mawaqit_for_wilayas[wilaya] = pd.concat((mawaqit_for_wilayas[wilaya], mawaqit_wilaya))
@@ -152,7 +173,7 @@ def check_dates(dates):
         td = dates[i+1] - dates[i]
         if td != oneday :
             logger.error(f'{dates[i]} and {dates[i+1]} are not consecutif ({td})')
-            
+
 
 def run(region, pdf, template):
     logger.debug(f'Start reading for region {region} from {pdf} with template {template}')
